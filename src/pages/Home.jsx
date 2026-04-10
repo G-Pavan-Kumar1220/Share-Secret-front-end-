@@ -47,7 +47,7 @@ export default function Home() {
       <div className="w-full max-w-lg bg-white rounded-2xl shadow-xl border-l-4 border-emerald-400 p-6 sm:p-8">
 
         <h1 className="text-2xl font-bold text-gray-800 text-center mb-6">
-          Create Paste
+          Type Your Message 
         </h1>
 
         <div className="mb-5">
@@ -101,7 +101,7 @@ export default function Home() {
               Loading...
             </>
           ) : (
-            "Create Paste"
+            "Generate Link"
           )}
         </button>
 
