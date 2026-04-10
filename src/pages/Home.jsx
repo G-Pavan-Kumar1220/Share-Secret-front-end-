@@ -7,9 +7,11 @@ export default function Home() {
   const [views, setViews] = useState('')
   const [error, setError] = useState(null)
   const [id, setId] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const submit = async () => {
     setError(null)
+    setLoading(true)
     try {
       const res = await fetch(`${BASE_URL}/api/pastes`, {
         method: 'POST',
@@ -28,28 +30,26 @@ export default function Home() {
 
       const data = await res.json()
       setId(data.id)
-      // alert('Link is ready')
     } catch (err) {
       setError(err.message)
+    } finally {
+      setLoading(false)
     }
   }
 
   const copyLink = async () => {
     const link = `${BASE_URL_FRONTEND}/p/${id}`
     await navigator.clipboard.writeText(link)
-    // alert('Link copied!')
   }
 
   return (
     <div className="min-h-screen min-w-screen flex justify-center items-center place-items-center bg-gray-100 px-4">
       <div className="w-full max-w-lg bg-white rounded-2xl shadow-xl border-l-4 border-emerald-400 p-6 sm:p-8">
 
-      
         <h1 className="text-2xl font-bold text-gray-800 text-center mb-6">
           Create Paste
         </h1>
 
-       
         <div className="mb-5">
           <textarea
             placeholder="Paste your secret content here..."
@@ -59,10 +59,7 @@ export default function Home() {
           />
         </div>
 
-       
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 mb-6">
-
-        
           <div>
             <input
               type="number"
@@ -77,7 +74,6 @@ export default function Home() {
             </p>
           </div>
 
-       
           <div>
             <input
               type="number"
@@ -91,18 +87,24 @@ export default function Home() {
               Expire after view limit
             </p>
           </div>
-
         </div>
 
-      
+        {/* Loading button */}
         <button
           onClick={submit}
-          className="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-xl transition"
+          disabled={loading}
+          className="w-full flex items-center justify-center bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-3 rounded-xl transition disabled:opacity-70 disabled:cursor-not-allowed"
         >
-          Create Paste
+          {loading ? (
+            <>
+              <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin mr-2"></span>
+              Loading...
+            </>
+          ) : (
+            "Create Paste"
+          )}
         </button>
 
-     
         {!error && id && (
           <div className="mt-6 rounded-xl border bg-gray-50 p-4">
             <a
@@ -126,7 +128,6 @@ export default function Home() {
           </div>
         )}
 
-  
         {error && (
           <p className="mt-4 text-sm text-red-600 text-center">
             {error}
